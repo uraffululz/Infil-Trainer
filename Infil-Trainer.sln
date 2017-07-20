@@ -1,7 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{C8040C3A-04A0-9F45-0D00-F8CC3B4C3456}") = "Infil-Trainer", "Assembly-CSharp.csproj", "{3289E104-C0F6-D9F8-6BD5-9D73770129C5}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infil-Trainer", "Assembly-CSharp.csproj", "{3289E104-C0F6-D9F8-6BD5-9D73770129C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
