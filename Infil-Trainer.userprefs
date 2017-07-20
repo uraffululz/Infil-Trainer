@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\RoomGenScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\PlayerMove.cs" Line="133" Column="1" />
+      <File FileName="Assets\Scripts\PlayerUI.cs" Line="68" Column="1" />
+      <File FileName="Assets\Scripts\RoomGenScript.cs" Line="107" Column="47" />
+      <File FileName="Assets\Scripts\PickupScript.cs" Line="17" Column="45" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
