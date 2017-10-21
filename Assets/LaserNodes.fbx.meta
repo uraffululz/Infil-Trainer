@@ -1,0 +1,156 @@
+fileFormatVersion: 2
+guid: 07dea9a6db4134640b9f97d943559f37
+timeCreated: 1507764183
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: BezierCircle
+    100002: Camera
+    100004: Crystal1
+    100006: Crystal2
+    100008: Crystal3
+    100010: Crystal_1
+    100012: Crystal_2
+    100014: Crystal_3
+    100016: Laser_For_NCP
+    100018: Laser_For_NLS
+    100020: //RootNode
+    100022: Layer1Light
+    100024: Layer2Light
+    100026: Layer3Light
+    100028: Node_Crystal_Platform
+    100030: Node_Crystal_Sphere
+    100032: Node_Lens_Sphere
+    400000: BezierCircle
+    400002: Camera
+    400004: Crystal1
+    400006: Crystal2
+    400008: Crystal3
+    400010: Crystal_1
+    400012: Crystal_2
+    400014: Crystal_3
+    400016: Laser_For_NCP
+    400018: Laser_For_NLS
+    400020: //RootNode
+    400022: Layer1Light
+    400024: Layer2Light
+    400026: Layer3Light
+    400028: Node_Crystal_Platform
+    400030: Node_Crystal_Sphere
+    400032: Node_Lens_Sphere
+    2000000: Camera
+    2300000: BezierCircle
+    2300002: Crystal1
+    2300004: Crystal2
+    2300006: Crystal3
+    2300008: Crystal_1
+    2300010: Crystal_2
+    2300012: Crystal_3
+    2300014: Laser_For_NCP
+    2300016: Laser_For_NLS
+    2300018: Node_Crystal_Platform
+    2300020: Node_Crystal_Sphere
+    2300022: Node_Lens_Sphere
+    3300000: BezierCircle
+    3300002: Crystal1
+    3300004: Crystal2
+    3300006: Crystal3
+    3300008: Crystal_1
+    3300010: Crystal_2
+    3300012: Crystal_3
+    3300014: Laser_For_NCP
+    3300016: Laser_For_NLS
+    3300018: Node_Crystal_Platform
+    3300020: Node_Crystal_Sphere
+    3300022: Node_Lens_Sphere
+    4300000: Node_Lens_Sphere
+    4300002: Laser_For_NLS
+    4300004: Node_Crystal_Platform
+    4300006: Crystal3
+    4300008: Crystal2
+    4300010: Crystal1
+    4300012: Laser_For_NCP
+    4300014: Node_Crystal_Sphere
+    4300016: Crystal_1
+    4300018: Crystal_2
+    4300020: Crystal_3
+    4300022: BezierCircle
+    10800000: Layer1Light
+    10800002: Layer2Light
+    10800004: Layer3Light
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -9,13 +9,6 @@ public class RoomGenScript : MonoBehaviour {
 	GameObject[] Planes;
 	Vector3[] Surfaces;
 	GameObject[] Doors;
-	public List<GameObject> PathCubes;
-	public List<GameObject> NextCubes;
-	public List<GameObject> CubesForPath;
-	public List<Vector3> CubePositions;
-	public List<Vector3> CubePosNext;
-	Vector3 nextNodePos;
-	List<Bounds> PathCubeBounds;
 	public List<int> surfaceList;
 	int surfaceSpawn;
 	Vector3 floorScale;
@@ -49,7 +42,6 @@ public class RoomGenScript : MonoBehaviour {
 
 	void Awake () {
 		SpawnRoom ();
-		CreatePath();
 		SpawnCoins ();
 	}
 
@@ -63,24 +55,24 @@ public class RoomGenScript : MonoBehaviour {
 		float roomSizeMag = new Vector3 (Planes [0].transform.localScale.x, Planes [1].transform.localScale.z, Planes [0].transform.localScale.z).magnitude * 10;
 		spawnCount = (int)(roomSizeMag*2.0f);
 
-		//SpawnLaserParents ();
-		//SpawnNodes ();
-		//SpawnReceivers ();
-		//SpawnLasers ();
+		SpawnLaserParents ();
+		SpawnNodes ();
+		SpawnReceivers ();
+		SpawnLasers ();
 
-		AlternateSpawnMethod ();
+		//AlternateSpawnMethod ();
 	}
 	
 
-	void AlternateSpawnMethod () {
-		/*Spawn a node/receiver pair each at a random position from the CubePositions list
+	/*void AlternateSpawnMethod () {
+		*Spawn a node/receiver pair each at a random position from the CubePositions list
 		 * Then, have them lerp to an adjacent CubePositions position over time (1 second?)
 		 * 		Make sure they don't move to the same position (or maybe even the same surface) at the same time
 		 * lerp the position/rotation/scale of the laserbeam between them as they move
 		 * Repeat constantly (turn this method into an IEnumerator)
 		 * 
 		 * The game view will need to be from a third-person perspective, then
-		 */
+		 *
 
 		nodePrefab = Instantiate(laserNode, PathCubes[Random.Range(0, CubePositions.Count)].transform.position, Quaternion.identity);
 		Nodes.Add (nodePrefab);
@@ -95,64 +87,9 @@ public class RoomGenScript : MonoBehaviour {
 		laserPrefab.gameObject.transform.localScale = new Vector3 (0.01f, 0.01f, laserScaleTotal);
 		laserPrefab.gameObject.transform.rotation = Quaternion.LookRotation (laserPrefab.transform.position - Receivers [0].transform.position);
 	}
+*/
 
 	void Update () {
-		StartCoroutine (MoveLasers ());
-	}
-
-	IEnumerator MoveLasers () {
-		//Determine which positions are adjacent to the current position of Nodes[0] and configure a list (CubePosNext)
-		foreach (var cube in PathCubes) {
-			if (Vector3.Distance(cube.transform.position, Nodes[0].transform.position) <= 1.0f) {
-				CubePosNext.Add (cube.transform.position);
-			}
-			/*if (cube.transform.position.x == Nodes[0].transform.position.x &&
-				cube.transform.position.y <= Nodes[0].transform.position.y + 1.0f &&
-				cube.transform.position.y >= Nodes[0].transform.position.y - 1.0f
-				||cube.transform.position.x == Nodes[0].transform.position.x &&
-				cube.transform.position.z <= Nodes[0].transform.position.z + 1.0f &&
-				cube.transform.position.z >= Nodes[0].transform.position.z - 1.0f
-
-				||cube.transform.position.y == Nodes[0].transform.position.y &&
-				cube.transform.position.x <= Nodes[0].transform.position.x + 1.0f &&
-				cube.transform.position.x >= Nodes[0].transform.position.x - 1.0f
-				||cube.transform.position.y == Nodes[0].transform.position.y &&
-				cube.transform.position.z <= Nodes[0].transform.position.z + 1.0f &&
-				cube.transform.position.z >= Nodes[0].transform.position.z - 1.0f
-
-				||cube.transform.position.z == Nodes[0].transform.position.z &&
-				cube.transform.position.x <= Nodes[0].transform.position.x + 1.0f &&
-				cube.transform.position.x >= Nodes[0].transform.position.x - 1.0f
-				||cube.transform.position.z == Nodes[0].transform.position.z &&
-				cube.transform.position.y <= Nodes[0].transform.position.y + 1.0f &&
-				cube.transform.position.y >= Nodes[0].transform.position.y - 1.0f
-			) {
-
-				CubePosNext.Add (cube.transform.position);
-			}*/
-		}
-
-		//Select one of the adjacent positions to move to
-		if (CubePosNext.Count > 0) {
-			nextNodePos = CubePosNext [Random.Range (0, CubePosNext.Count)];
-		} else {
-			nextNodePos = Nodes [0].transform.position;
-		}
-
-		//Lerp position of Nodes[0] to the new position
-		for (float t = 0; t < 1.0f; t += Time.deltaTime) {
-			Nodes [0].transform.position = Vector3.Lerp (Nodes [0].transform.position, nextNodePos, t/1000);
-
-			//Adjust laser position, rotation, and scale as the node moves
-			float laserScaleTotal = (Receivers [0].transform.position - Nodes [0].transform.position).magnitude;
-			Vector3 laserPos = (Nodes [0].transform.position + Receivers [0].transform.position) / 2;
-			laserPrefab.gameObject.transform.position = laserPos;
-			laserPrefab.gameObject.transform.localScale = new Vector3 (0.01f, 0.01f, laserScaleTotal);
-			laserPrefab.gameObject.transform.rotation = Quaternion.LookRotation (laserPrefab.transform.position - Receivers [0].transform.position);
-		}
-		CubePosNext.RemoveRange(0, CubePosNext.Count-1);
-
-		yield return new WaitForSeconds (5.0f);
 	}
 
 
@@ -249,153 +186,6 @@ public class RoomGenScript : MonoBehaviour {
 		Planes = new GameObject[] { floor, wall_1, wall_2, wall_3, wall_4, ceiling };
 		Surfaces = new Vector3[] { floorCol, wall_1Col, wall_2Col, wall_3Col, wall_4Col, ceilingCol };
 		Doors = new GameObject[] { door_1, door_2 };
-	}
-
-
-	void CreatePath () {
-//Give cubes on path a tag which can be checked against the spawning nodes/receivers/lasers later to prevent overlapping
-
-		//Creating a path through the room
-		//Initialize Path Lists
-		PathCubes = new List<GameObject> ();
-		NextCubes = new List<GameObject> ();
-		CubesForPath = new List<GameObject> ();
-		CubePositions = new List<Vector3>();
-		PathCubeBounds = new List<Bounds> ();
-
-		//Spawn cubes along floor and add to PathCubes list
-		for (float c = -floorScale.z*5; c < floorScale.z*5; c++) {
-			for (float b = -floorScale.x*5; b < floorScale.x*5; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (b, 0.0f, c);
-				PathCubes.Add (pathCube);
-			}
-		}
-		//Spawn cubes along ceiling and add to PathCubes list
-		for (float c = -floorScale.z*5; c < floorScale.z*5; c++) {
-			for (float b = -floorScale.x*5; b < floorScale.x*5; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (b, wallHeight*10, c);
-				PathCubes.Add (pathCube);
-			}
-		}
-		//Spawn cubes along near wall and add to PathCubes list
-		for (float a = -floorScale.x*5; a < floorScale.x*5; a++) {
-			for (float b = 0; b < wallHeight*10; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (a, b, -floorScale.z*5);
-				PathCubes.Add (pathCube);
-			}
-		}
-		//Spawn cubes along left wall and add to PathCubes list
-		for (float c = -floorScale.z*5; c < floorScale.z*5; c++) {
-			for (float b = 0; b < wallHeight*10; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (-floorScale.x*5, b, c);
-				PathCubes.Add (pathCube);
-			}
-		}
-		//Spawn cubes along right wall and add to PathCubes list
-		for (float c = -floorScale.z*5; c < floorScale.z*5; c++) {
-			for (float b = 0; b < wallHeight*10; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (floorScale.x*5, b, c);
-				PathCubes.Add (pathCube);
-			}
-		}
-		//Spawn cubes along far wall and add to PathCubes list
-		for (float a = -floorScale.x*5; a < floorScale.x*5; a++) {
-			for (float b = 0; b < wallHeight*10; b++) {
-				GameObject pathCube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				pathCube.transform.position = new Vector3 (a, b, floorScale.z*5);
-				PathCubes.Add (pathCube);
-			}
-		}
-
-
-		//Find which cubes are positioned near the Entry Door and add them to the NextCubes list
-		foreach (var cube in PathCubes) {
-			cube.GetComponent<MeshRenderer> ().enabled = false;
-			cube.GetComponent<BoxCollider> ().isTrigger = true;
-			if (Doors[0].GetComponent<BoxCollider>().bounds.Contains(cube.transform.position)) {
-				NextCubes.Add (cube);
-			}
-		}
-
-		//Start the path at the location of one of the cubes near the Entry Door
-		//And add it to the relevant lists
-		GameObject startCube = NextCubes [Random.Range (0, NextCubes.Count)];
-		CubePositions.Add (startCube.transform.position);
-		CubesForPath.Add (startCube);
-		PathCubeBounds.Add(startCube.GetComponent<BoxCollider>().bounds);
-
-		//Determine which cubes from PathCubes are touching startCube and reuse/repopulate NextCubes
-		NextCubes.Clear ();
-		foreach (var cube in PathCubes) {
-			if (startCube.GetComponent<BoxCollider>().bounds.Intersects(cube.GetComponent<BoxCollider>().bounds)) {
-				NextCubes.Add(cube);
-			}
-		}
-
-		//Repeat previous step until a path is formed from Entry Door to Exit Door
-		KeepGoingWithPath ();
-
-	}
-
-
-	void KeepGoingWithPath () {
-		//Continue building path by selecting a random cube touching the currently selected cube
-		//Continuing from startCube, determine which of the cubes touching it will be next on the path
-//This "if statement" may not be necessary
-		if (NextCubes.Count > 0) {
-			GameObject nextCube = NextCubes [Random.Range (0, NextCubes.Count)];
-			NextCubes.Clear ();
-			CubePositions.Add (nextCube.transform.position);
-
-			//Determine which nearby cubes to choose from when adding to path
-			foreach (var cube in PathCubes) {
-				//If a cube is touching the current cube...
-				if (nextCube.GetComponent<BoxCollider> ().bounds.Intersects (cube.GetComponent<BoxCollider> ().bounds)) {
-					//...and its position is not already on the CubePositions list (preventing backtracking of path)...
-					///...and its position would move the path forward...
-					if (!CubePositions.Contains (cube.transform.position) && 
-						cube.transform.position.z >= nextCube.transform.position.z) {
-						//...then add it to Nextcubes
-						NextCubes.Add (cube);
-					}
-				}
-			}
-
-			//When the path reaches the Exit Door, it is done
-			if (nextCube.transform.position.z >= floorScale.z*5) {
-				//Clear the room of all superfluous cubes...
-				/*Debug.Log(PathCubes.Count);
-				foreach (var cube in PathCubes) {
-					Destroy (cube);
-				}
-				PathCubes.Clear ();
-*/
-				NextCubes.Clear ();
-
-				//...but keep the ones used to create the path
-				foreach (var position in CubePositions) {
-					GameObject yellowBrick = GameObject.CreatePrimitive (PrimitiveType.Cube);
-					yellowBrick.transform.position = position;
-					CubesForPath.Add (yellowBrick);
-					PathCubeBounds.Add (yellowBrick.GetComponent<BoxCollider> ().bounds);
-				}
-				foreach (var pathCube in CubesForPath) {
-					pathCube.name = "PathCube";
-					//pathCube.tag = "PathCube";
-					Vector3 cubeColSize = pathCube.GetComponent<BoxCollider> ().bounds.extents;
-					cubeColSize = new Vector3 (0.1f, 0.1f, 0.1f);
-					pathCube.GetComponent<BoxCollider> ().isTrigger = true;
-				}
-			} else {
-				//If the path has yet to reach the Exit Door, repeat the selection process and continue building
-				KeepGoingWithPath ();
-			}
-		}
 	}
 
 
@@ -519,6 +309,11 @@ public class RoomGenScript : MonoBehaviour {
 
 				laserCountRemainder++;
 			}
+
+			Nodes [0].transform.LookAt (Receivers [0].transform.position);
+			Receivers [0].transform.LookAt (Nodes [0].transform.position);
+
+
 			Nodes.RemoveAt (0);
 			Receivers.RemoveAt (0);
 		}

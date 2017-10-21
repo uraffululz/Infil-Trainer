@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 20c9c34b783470546a2dab0d641207b2
-timeCreated: 1484835816
+timeCreated: 1507763914
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - coinRef: {instanceID: 0}
+  - playerObject: {instanceID: 0}
+  - laserNode: {fileID: 100020, guid: 07dea9a6db4134640b9f97d943559f37, type: 3}
+  - laserReceiver: {instanceID: 0}
+  - laser: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

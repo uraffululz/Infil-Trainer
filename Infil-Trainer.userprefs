@@ -2,10 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\RoomGenScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerMove.cs" Line="133" Column="1" />
-      <File FileName="Assets\Scripts\PlayerUI.cs" Line="68" Column="1" />
-      <File FileName="Assets\Scripts\RoomGenScript.cs" Line="107" Column="47" />
-      <File FileName="Assets\Scripts\PickupScript.cs" Line="17" Column="45" />
+      <File FileName="Assets\Scripts\PlayerMove.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\RoomGenScript.cs" Line="314" Column="41" />
+      <File FileName="Assets\Scripts\PickupScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\RoomScript.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

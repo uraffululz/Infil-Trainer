@@ -150,6 +150,7 @@ public class PlayerMove : MonoBehaviour {
 				if (Input.GetKeyDown (KeyCode.LeftControl)) {
 					StartCoroutine (ChangingSurface (reachedFloor, Vector3.Normalize (rb.transform.forward)));
 					myStance = Stances.crawling;
+					//playerView.rotate (Vector3.up * 90);
 					Debug.Log ("Crawling");
 				}
 			}
