@@ -14,9 +14,18 @@ public class RoomGenScript : MonoBehaviour {
 	Vector3 floorScale;
 	float wallHeight;
 
-	//SpawnCoins variables
+	//SpawnCoins and SpawnTreasure variables
+	[SerializeField] GameObject caseRef;
+	[SerializeField] GameObject caseRef2;
+	GameObject[] Cases;
+	GameObject displayCase;
 	[SerializeField] GameObject coinRef;
 	GameObject coin;
+	[SerializeField] GameObject treasureRef;
+	[SerializeField] GameObject treasureRef2;
+	GameObject[] Treasures;
+	GameObject treasure;
+	public List<GameObject> treasureList;
 
 	//SpawnPlayer variables
 	[SerializeField] GameObject playerObject;
@@ -40,9 +49,13 @@ public class RoomGenScript : MonoBehaviour {
 	int laserCountRemainder;
 
 
+//
+
+
 	void Awake () {
 		SpawnRoom ();
 		SpawnCoins ();
+		SpawnTreasure ();
 	}
 
 	void Start () {
@@ -190,21 +203,44 @@ public class RoomGenScript : MonoBehaviour {
 
 
 	void SpawnPlayer () {
-		Vector3 playerSpawn = new Vector3 (0.0f, 1f, (-Planes[0].transform.localScale.z*5) + 1);
+		Vector3 playerSpawn = new Vector3 (0.0f, 1f, (-Planes[0].transform.localScale.z * 5) + 1);
 		player = Instantiate (playerObject, playerSpawn, Quaternion.identity);
 		player.name = ("Player");
 	}
 
 
 	void SpawnCoins () {
-		GameObject coinParent = new GameObject();
-		coinParent.name = "CoinParent";
+		GameObject treasureParent = new GameObject();
+		treasureParent.name = "TreasureParent";
 		for (int i = 0; i < spawnCount/10; i++) {
 			Vector3 coinSpawn = new Vector3 (Random.Range (-Surfaces [0].x + 0.5f, Surfaces [0].x - 0.5f), Surfaces [0].y + 0.5f, Random.Range (-Surfaces [0].z + 0.5f, Surfaces [0].z - 0.5f));
 			coin = Instantiate (coinRef, coinSpawn, Quaternion.Euler(Vector3.right * 90));
 			coin.tag = "Coin";
-			coin.transform.SetParent (coinParent.transform);
+			coin.transform.SetParent (treasureParent.transform);
+			treasureList.Add (coin);
 		}
+	}
+
+
+	void SpawnTreasure () {
+		Cases = new GameObject[] {caseRef, caseRef2};
+		int whichCase = Random.Range (0, 2);
+		Vector3 caseSpawn = new Vector3 (Random.Range (-Surfaces [0].x + 0.5f, Surfaces [0].x - 0.5f), Surfaces [0].y, Random.Range (-Surfaces [0].z + 0.5f, Surfaces [0].z - 0.5f));
+		displayCase = Instantiate (Cases[whichCase], caseSpawn, Quaternion.Euler(Vector3.left * 90));
+
+
+		Treasures = new GameObject[] {treasureRef, treasureRef2};
+		int whichTreasure = Random.Range (0, 2);
+		Vector3 treasureSpawn = Vector3.zero;
+		if (whichCase == 0) {
+			treasureSpawn = new Vector3 (caseSpawn.x, caseSpawn.y + 1.325f, caseSpawn.z);
+		} else if (whichCase == 1) {
+			treasureSpawn = new Vector3 (caseSpawn.x, caseSpawn.y + 0.6f, caseSpawn.z);
+		} else {
+			treasureSpawn = new Vector3 (caseSpawn.x, caseSpawn.y, caseSpawn.z);
+		}
+		treasure = Instantiate (Treasures[whichTreasure], treasureSpawn, Quaternion.Euler(Vector3.left * 90));
+		treasureList.Add (treasure);
 	}
 
 
@@ -298,6 +334,7 @@ public class RoomGenScript : MonoBehaviour {
 			if (laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (player.GetComponent<CapsuleCollider> ().bounds)
 			    || laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (Doors [0].GetComponent<BoxCollider> ().bounds)
 			    || laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (Doors [1].GetComponent<BoxCollider> ().bounds)
+				//||treasureList.ForEach(gameObject.GetComponent<CapsuleCollider>().bounds.Intersects)
 				//|| PathCubeBounds.Any(b => b.Intersects(laserPrefab.GetComponent<BoxCollider> ().bounds))
 			) {
 				Destroy (laserPrefab);
