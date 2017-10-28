@@ -78,11 +78,9 @@ public class PlayerUI : MonoBehaviour {
 //I don't want to have to keep checking the Time.timeSinceLevelLoad here
 //Fix the bug that causes him to be hit by a laser when the level loads
 		if (other.CompareTag("Laser") && Time.timeSinceLevelLoad > 0.1f) {
-			Debug.Log ("You touched a laser");
 			if (!timerActive && detectedTimer <= 0.0f) {
 				timerActive = true;
 				detectedTimer = 30.0f;
-				Debug.Log ("Timer activated");
 			}
 		}
 	}

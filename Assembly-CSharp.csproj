@@ -51,9 +51,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\DoorScript.cs" />
      <Compile Include="Assets\Scripts\DoorScript_Keypad.cs" />
      <Compile Include="Assets\Scripts\DoorScript_Rotary.cs" />
+     <Compile Include="Assets\Scripts\KeypadButtonScript.cs" />
+     <Compile Include="Assets\Scripts\KeypadSceneScript.cs" />
      <Compile Include="Assets\Scripts\PickupScript.cs" />
      <Compile Include="Assets\Scripts\PlayerMove.cs" />
      <Compile Include="Assets\Scripts\PlayerUI.cs" />

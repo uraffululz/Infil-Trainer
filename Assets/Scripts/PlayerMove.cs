@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour {
 
 	//Global References
 	Vector3 gravity;
+
 
 	//GameObject References
 	Camera playerView;
@@ -53,7 +55,7 @@ public class PlayerMove : MonoBehaviour {
 	
 
 	void Update () {
-
+		
 	}
 
 
@@ -123,12 +125,20 @@ public class PlayerMove : MonoBehaviour {
 						myStance = Stances.crawling;
 					}
 				} else if (reachedWall.collider.CompareTag("ExitDoor")) {
+					GameObject hitDoor = reachedWall.collider.gameObject;
 					Debug.Log ("Press R to open the door");
 					if (Input.GetKeyDown(KeyCode.R)) {
 /* Position player in front of door
  */
-						StartCoroutine(MoveToDoor (reachedWall));
-						StickToSurface (Vector3.down*9.8f);
+						//StartCoroutine(MoveToDoor (reachedWall));
+						//StickToSurface (Vector3.down*9.8f);
+
+//Switch to "Lock" scene
+						EventSystem.current.enabled = false;
+						SceneManager.LoadSceneAsync("Test_Door_Keypad", LoadSceneMode.Additive);
+						SceneManager.MoveGameObjectToScene(hitDoor.transform.parent.gameObject, SceneManager.GetSceneByName("Test_Door_Keypad"));
+						SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Test_Door_Keypad"));
+
 
 
 /* Disable player movement/rotation Input and enable door Input
@@ -137,6 +147,11 @@ public class PlayerMove : MonoBehaviour {
  * 		Will this wipe away any failed attempts on the door, or are they persistent?
  */
 
+					}
+				} else if (reachedWall.collider.CompareTag("DisplayCase")) {
+					Debug.Log ("Press R to open the display case");
+					if (Input.GetKeyDown (KeyCode.R)) {
+						Debug.Log ("You attempted to open the display case");
 					}
 				}
 			}

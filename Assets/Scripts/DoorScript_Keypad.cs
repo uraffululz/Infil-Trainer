@@ -3,21 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public class DoorScript_Keypad : MonoBehaviour {
 
+	GameObject player;
+	PlayerMove PMove;
+	GameObject doorParent;
+	GameObject keySceneEmpty;
+
+
 	[SerializeField] int[] keypadDigits;
-	[SerializeField] string keypadCode;
 	[SerializeField] List<string> keypadGuesses;
+	[SerializeField] string keypadCode;
 
 	public List<GameObject> Buttons;
 	GameObject buttonClicked;
 	Text buttonClickedText;
 
-	int guessesRemaining = 30;
+	int guessesRemaining = 4;
 
 
 	void Start () {
+		player = GameObject.Find ("Player");
+		PMove = player.GetComponent<PlayerMove> ();
+		PMove.enabled = false;
+		doorParent = GameObject.Find ("DoorParent");
+		keySceneEmpty = GameObject.Find ("KeypadSceneEmpty");
+
 		KeypadSetup ();
 		ButtonSetup ();
 	}
@@ -45,8 +59,10 @@ public class DoorScript_Keypad : MonoBehaviour {
 		while (keypadDigits[3] == keypadDigits[0] || keypadDigits[3] == keypadDigits[1] || keypadDigits[3] == keypadDigits[2]) {
 			keypadDigits[3] = Random.Range (0, 10);
 		}
+		print ("Keypad digits determined. Compiling digit sequences");
 
 		//Compile sequences using digits
+		keypadGuesses = new List<string>();
 		keypadGuesses.Add(string.Concat(keypadDigits[0], keypadDigits[1], keypadDigits[2], keypadDigits[3]));
 		keypadGuesses.Add(string.Concat(keypadDigits[0], keypadDigits[1], keypadDigits[3], keypadDigits[2]));
 		keypadGuesses.Add(string.Concat(keypadDigits[0], keypadDigits[2], keypadDigits[1], keypadDigits[3]));
@@ -75,12 +91,20 @@ public class DoorScript_Keypad : MonoBehaviour {
 		keypadGuesses.Add(string.Concat(keypadDigits[3], keypadDigits[2], keypadDigits[0], keypadDigits[1]));
 		keypadGuesses.Add(string.Concat(keypadDigits[3], keypadDigits[2], keypadDigits[1], keypadDigits[0]));
 
+		print ("Keypad sequences determined. Choosing correct code");
+
 		//Determine correct keypad code by randomly choosing a sequence from keypadGuesses[]
+		//keypadCode = null;
 		keypadCode = keypadGuesses[Random.Range(0, keypadGuesses.Count)];
+
+		print ("Keycode chosen");
 	}
 
 
 	void ButtonSetup(){
+		print ("Populating Buttons array");
+		Buttons = new List<GameObject>();
+
 		Buttons.Add(GameObject.Find ("Button1"));
 		Buttons.Add(GameObject.Find ("Button2"));
 		Buttons.Add(GameObject.Find ("Button3"));
@@ -107,6 +131,7 @@ public class DoorScript_Keypad : MonoBehaviour {
 		Buttons.Add(GameObject.Find ("Button24"));
 
 		foreach (var button in Buttons) {
+			button.GetComponent<Button> ().onClick.AddListener (ClickButton);
 			int assignedGuess = (Random.Range (0, keypadGuesses.Count));
 			Text buttonText = button.GetComponentInChildren<Text> ();
 			buttonText.text = keypadGuesses[assignedGuess];
@@ -121,6 +146,7 @@ public class DoorScript_Keypad : MonoBehaviour {
 		if (buttonClickedText.text == keypadCode) {
 			buttonClickedText.text = "<color=green>" + buttonClickedText.text + "</color>";
 			Debug.Log ("You guessed right. YOU WIN");
+			KeypadUnlocked ();
 		} else {
 			Debug.Log ("You guessed wrong");
 			guessesRemaining--;
@@ -167,4 +193,25 @@ public class DoorScript_Keypad : MonoBehaviour {
 		Debug.Log (correctlyPlacedDigits);
 	}
 
+
+	public void KeypadUnlocked(){
+		PMove.enabled = true;
+		gameObject.transform.Rotate (Vector3.up * 90, Space.Self);
+		//doorParent.transform.Rotate (Vector3.up * 90, Space.Self);
+		SceneManager.MoveGameObjectToScene(doorParent, SceneManager.GetSceneByName ("Test_RoomGen"));
+		SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName ("Test_RoomGen"));
+		Destroy (GameObject.Find ("Canvas"));
+		Destroy (EventSystem.current.gameObject);
+		GameObject eventSys = FindObjectOfType<EventSystem> ().gameObject;
+		eventSys.GetComponent<EventSystem> ().enabled = true;
+		Destroy (keySceneEmpty);
+
+		keypadDigits.Initialize ();
+		keypadGuesses.Clear();
+		Buttons.Clear();
+
+		SceneManager.MergeScenes(SceneManager.GetSceneByName ("Test_Door_Keypad"), SceneManager.GetSceneByName ("Test_RoomGen"));
+		//SceneManager.UnloadSceneAsync ("Test_Door_Keypad");
+		gameObject.GetComponent<DoorScript_Keypad>().enabled = false;
+	}
 }

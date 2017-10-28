@@ -14,6 +14,9 @@ public class RoomGenScript : MonoBehaviour {
 	Vector3 floorScale;
 	float wallHeight;
 
+	//Components for SpawnRoom GameObjects
+	DoorScript_Keypad keypadDoorScript;
+
 	//SpawnCoins and SpawnTreasure variables
 	[SerializeField] GameObject caseRef;
 	[SerializeField] GameObject caseRef2;
@@ -184,16 +187,30 @@ public class RoomGenScript : MonoBehaviour {
 		door_1.AddComponent<BoxCollider> ();
 
 		//Spawn Exit Door
+		GameObject door_2Parent = new GameObject ();
+		door_2Parent.name = ("DoorParent");
+		Vector3 door2Pos = new Vector3 (0.0f, 1.25f, floorScale.z * 5);
+		door_2Parent.transform.Translate (door2Pos);
+
 		GameObject door_2 = GameObject.CreatePrimitive (PrimitiveType.Cube);
+		door_2.transform.SetParent (door_2Parent.transform);
 		door_2.name = ("ExitDoor");
 		door_2.tag = "ExitDoor";
 		door_2.transform.localScale = doorScale;
-		door_2.transform.Translate (0.0f, 1.25f, floorScale.z * 5);
-		door_2.transform.SetParent (gameObject.transform);
-		BoxCollider door_2Col = door_2.GetComponent<BoxCollider> ();
-		door_2Col.size = new Vector3 (3.0f, 1.0f, 15.0f);
-		door_2Col.isTrigger = true;
-		door_2.AddComponent<BoxCollider> ();
+		door_2.transform.Translate (door2Pos);
+		door_2.AddComponent<DoorScript_Keypad>();
+		door_2.GetComponent<DoorScript_Keypad> ().enabled = false;
+
+		GameObject keypad = GameObject.CreatePrimitive (PrimitiveType.Cube);
+		keypad.transform.SetParent (door_2Parent.transform);
+		Vector3 keypadOffset = new Vector3 (0.3f, 0.0f, -0.13f);
+		keypad.transform.Translate (door2Pos + keypadOffset);
+		keypad.transform.localScale = new Vector3 (0.2f, 0.2f, 0.05f);
+
+		//BoxCollider door_2Col = door_2.GetComponent<BoxCollider> ();
+		//door_2Col.size = new Vector3 (3.0f, 1.0f, 15.0f);
+		//door_2Col.isTrigger = true;
+		//door_2.AddComponent<BoxCollider> ();
 
 		//Initialize Arrays
 		Planes = new GameObject[] { floor, wall_1, wall_2, wall_3, wall_4, ceiling };
@@ -225,8 +242,9 @@ public class RoomGenScript : MonoBehaviour {
 	void SpawnTreasure () {
 		Cases = new GameObject[] {caseRef, caseRef2};
 		int whichCase = Random.Range (0, 2);
-		Vector3 caseSpawn = new Vector3 (Random.Range (-Surfaces [0].x + 0.5f, Surfaces [0].x - 0.5f), Surfaces [0].y, Random.Range (-Surfaces [0].z + 0.5f, Surfaces [0].z - 0.5f));
+		Vector3 caseSpawn = new Vector3 (Random.Range (-Surfaces [0].x + 1.5f, Surfaces [0].x - 1.5f), Surfaces [0].y, Random.Range (-Surfaces [0].z + 1.0f, Surfaces [0].z - 1.0f));
 		displayCase = Instantiate (Cases[whichCase], caseSpawn, Quaternion.Euler(Vector3.left * 90));
+		displayCase.tag = "DisplayCase";
 
 
 		Treasures = new GameObject[] {treasureRef, treasureRef2};
@@ -334,6 +352,7 @@ public class RoomGenScript : MonoBehaviour {
 			if (laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (player.GetComponent<CapsuleCollider> ().bounds)
 			    || laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (Doors [0].GetComponent<BoxCollider> ().bounds)
 			    || laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (Doors [1].GetComponent<BoxCollider> ().bounds)
+				|| laserPrefab.GetComponent<BoxCollider> ().bounds.Intersects (displayCase.GetComponent<MeshCollider> ().bounds)
 				//||treasureList.ForEach(gameObject.GetComponent<CapsuleCollider>().bounds.Intersects)
 				//|| PathCubeBounds.Any(b => b.Intersects(laserPrefab.GetComponent<BoxCollider> ().bounds))
 			) {
